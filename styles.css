@@ -1,13 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700&display=swap");
 
 html {
     height: 100%;
     width: 100%;
-    
 }
 
 body {
-    font-family: 'Lexend', sans-serif;
+    font-family: "Lexend", sans-serif;
     font-style: none;
     color: white;
 
@@ -34,7 +33,7 @@ body {
     display: grid;
     row-gap: 7%;
     column-gap: 7%;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 3fr 3fr;
 }
 
 .item-button-selected {
@@ -57,14 +56,19 @@ body {
     color: white;
 }
 
-
 #activated-item-container {
     grid-row: 1 / 5;
     grid-column: 2;
 }
 
+#upgrade-container {
+    grid-row: 1 / 5;
+    grid-column: 3;
+}
+
 #activated-item {
-    max-height: 256px;
+    height: 256px;
+    width: 256px;
     transition: transform 0.1s; /* Animation */
 }
 
@@ -78,5 +82,3 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
-
-

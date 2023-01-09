@@ -1,75 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Final Project Name Here</title>
-    <link rel="stylesheet" href="bulma.min.css" />
-    <link rel="stylesheet" href="styles.css"
-  </head>
-  <body>
-    <div class="has-text-centered">
-      <div class="raised-box">
-        <h1 class="is-size-1">Bread Clicker</h1>
-      </div>
-    </div>
-
-    <!-- Inventory bar -->
-    <div class="columns is-centered" id="inventory-bar">
-      <div class="column has-text-centered">
-        <div class="raised-box">
-          <div>Wheat</div>
-          <div id="wheat-inv">0</div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            http-equiv="X-UA-Compatible"
+            content="IE=edge"
+        />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Final Project Name Here</title>
+        <link
+            rel="stylesheet"
+            href="bulma.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="styles.css"
+        />
+    </head>
+    <body>
+        <div class="has-text-centered">
+            <div class="raised-box">
+                <h1 class="is-size-1">Bread Clicker</h1>
+            </div>
         </div>
-      </div>
-      <div class="column has-text-centered">
-        <div class="raised-box">
-          <div>Flour</div>
-          <div id="flour-inv">0</div>
+
+        <!-- Inventory bar -->
+        <div
+            class="columns is-centered"
+            id="inventory-bar"
+        >
+            <div class="column has-text-centered">
+                <div class="raised-box">
+                    <div>Wheat</div>
+                    <div id="wheat-inv">0</div>
+                </div>
+            </div>
+            <div class="column has-text-centered">
+                <div class="raised-box">
+                    <div>Flour</div>
+                    <div id="flour-inv">0</div>
+                </div>
+            </div>
+            <div class="column has-text-centered">
+                <div class="raised-box">
+                    <div>Dough</div>
+                    <div id="dough-inv">0</div>
+                </div>
+            </div>
+
+            <div class="column has-text-centered">
+                <div class="raised-box">
+                    <div>Bread</div>
+                    <div id="bread-inv">0</div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="column has-text-centered">
-        <div class="raised-box">
-          <div>Dough</div>
-          <div id="dough-inv">0</div>
+
+        <!-- Inventory Bar End -->
+
+        <!-- Main Grid -->
+        <div class="grid-container">
+            <div id="activated-item-container">
+                <img
+                    id="activated-item"
+                    src="assets/images/wheat.jpg"
+                    alt=""
+                    onclick="activatedItemClicked()"
+                />
+            </div>
+
+            <!-- wheat -->
+            <div>
+                <button
+                    class="button item-button-selected"
+                    id="wheat-button"
+                    onclick="handleItemSwitch('wheat')"
+                >
+                    Wheat
+                </button>
+            </div>
+
+            <!-- flour -->
+            <div>
+                <button
+                    disabled
+                    class="button item-button-deselected"
+                    id="flour-button"
+                    onclick="handleItemSwitch('flour')"
+                >
+                    Flour
+                </button>
+            </div>
+
+            <!-- Dough -->
+            <div>
+                <button
+                    disabled
+                    class="button item-button-deselected"
+                    id="dough-button"
+                    onclick="handleItemSwitch('dough')"
+                >
+                    Dough
+                </button>
+            </div>
+
+            <!-- Bread -->
+            <div>
+                <button
+                    disabled
+                    class="button item-button-deselected"
+                    id="bread-button"
+                    onclick="handleItemSwitch('bread')"
+                >
+                    Bread
+                </button>
+            </div>
+
+            <div id="upgrade-container">
+                <ul>
+                    <div class="upgrade-box">
+                        <h2>Auto Wheat</h2>
+                        <p>Will automatically buy 1 wheat every 2 seconds</p>
+                    </div>
+                </ul>
+            </div>
         </div>
-      </div>
-
-      <div class="column has-text-centered">
-        <div class="raised-box">
-          <div>Bread</div>
-          <div id="bread-inv">0</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Inventory Bar End -->
-
-    <!-- Main Grid -->
-    <div class="grid-container">
-        <div id="activated-item-container">
-            <img id="activated-item" src="assets/images/wheat.jpg" alt="" onclick="activatedItemClicked()">
-        </div>
-        <!-- wheat -->
-      <div style="">
-        <button class="button item-button-selected" id="wheat-button" onclick="handleItemSwitch('wheat')">Wheat</button>
-      </div>
-
-      <!-- flour -->
-      <div>
-        <button class="button item-button-deselected" id="flour-button" onclick="handleItemSwitch('flour')">Flour</button>
-      </div>
-
-      <!-- Dough -->
-      <div>
-        <button class="button item-button-deselected"id="dough-button"  onclick="handleItemSwitch('dough')">Dough</button>
-      </div>
-      <div>
-        <button disabled class="button item-button-deselected" id="bread-button" onclick="handleItemSwitch('bread')">Bread</button>
-      </div>
-      
-    </div>
-  </body>
-  <script src="app.js"></script>
+        <!-- Main Grid End -->
+    </body>
+    <script src="app.js"></script>
 </html>

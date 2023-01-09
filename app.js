@@ -22,26 +22,27 @@ var uiItemScores = [
 
 var activatedItemImage = document.getElementById("activated-item");
 
+var GAME_SAVE_KEY = "GAME_SAVE";
+
 // ##############
 // ### EVENTS ###
 // ##############
 
 function activatedItemClicked() {
-    let index = getIndexFromName(activatedItem);
     // Before we increment the score we need to check
+    let item = getIndexFromName(activatedItem);
     // to see if there is enough of the previous item
     // available to make the current item.
 
-    if (index > 0) {
-        // If wheat is not selected.
-        if (scores[index - 1] >= itemCosts[index]) {
-            console.log("You can buy this");
-            scores[index - 1] -= itemCosts[index];
+    if (canAfford(item)) {
+        scores[item - 1] -= itemCosts[item]; // Subtract the cost.
 
-            scores[index] += 1;
-        }
-    } else if (index == 0) {
-        scores[index] += 1;
+        scores[item] += 1; // Add to the item just bought.
+    } else {
+        // If a user had an item activated but can now no longer
+        // afford it select the previous item.
+        console.log(`Switching to ${getNameFromIndex(item)}`);
+        handleItemSwitch(getNameFromIndex(item - 1));
     }
 
     // Display that score on the UI
@@ -51,8 +52,25 @@ function activatedItemClicked() {
         i++;
     });
     console.log(scores);
+
+    // Each click we want to update the item buttons
+    // to show if the user can afford it.
+    let j = 0;
+    itemButtons.forEach((element) => {
+        element.disabled = !canAfford(j);
+        if (!canAfford(j)) element.classList.remove("item-button-selected");
+
+        j++;
+    });
+
+    // Testing local storage:
+    saveToLocalStorage();
 }
 
+/**
+ * A function that will update the activated item and reflect it to the UI.
+ * @param {string} changeTo the name of the new activated item.
+ */
 function handleItemSwitch(changeTo) {
     activatedItem = changeTo;
     switchUIActivatedItem(getIndexFromName(changeTo));
@@ -64,6 +82,22 @@ function handleItemSwitch(changeTo) {
 // ################
 // #### HELPERS ###
 // ################
+
+/**
+ * Will check to see if the user has enough of the required item
+ * to by the given item.
+ * @param {int} itemIndex
+ */
+function canAfford(itemIndex) {
+    if (itemIndex > 0) {
+        // If wheat is not selected.
+        if (scores[itemIndex - 1] >= itemCosts[itemIndex]) {
+            return true;
+        }
+    } else if (itemIndex == 0) {
+        return true;
+    }
+}
 
 /**
  * Will change the UI to represent whichever item is
@@ -96,6 +130,15 @@ function switchUIActivatedItem(newActivatedItemIndex) {
 }
 
 /**
+ * Save the game to the local storage in the browser.
+ */
+function saveToLocalStorage() {
+    localStorage.setItem(GAME_SAVE_KEY, scores);
+
+    console.log(localStorage.getItem(GAME_SAVE_KEY));
+}
+
+/**
  * Returns the index of the DOM element from a name.
  * @param name The name of the element to look for.
  */
@@ -112,5 +155,25 @@ function getIndexFromName(name) {
 
         default:
             return -1;
+    }
+}
+
+/**
+ * Returns the name of the DOM element from a index.
+ * @param {int} index The index you want to convert to a name.
+ */
+function getNameFromIndex(index) {
+    switch (index) {
+        case 0:
+            return "wheat";
+        case 1:
+            return "flour";
+        case 2:
+            return "dough";
+        case 3:
+            return "bread";
+
+        default:
+            return "none";
     }
 }

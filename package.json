@@ -1,0 +1,26 @@
+{
+  "name": "bread-clicker-2",
+  "version": "1.0.0",
+  "description": "The better remake of Bread Clicker",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nerdYkiD72/Bread-Clicker-2.git"
+  },
+  "keywords": [
+    "breadclicker"
+  ],
+  "author": "Thatcher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nerdYkiD72/Bread-Clicker-2/issues"
+  },
+  "homepage": "https://github.com/nerdYkiD72/Bread-Clicker-2#readme",
+  "dependencies": {
+    "dot": "^1.1.3",
+    "lit": "^2.5.0"
+  }
+}
