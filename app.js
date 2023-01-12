@@ -146,9 +146,13 @@ function getLocalStorageData() {
     let rawData = localStorage.getItem(GAME_SAVE_KEY);
     let data = [];
 
-    rawData.split(",").forEach((element) => {
-        data.push(parseInt(element));
-    });
+    if (rawData) {
+        rawData.split(",").forEach((element) => {
+            data.push(parseInt(element));
+        });
+    } else {
+        data = [0, 0, 0, 0, 0];
+    }
 
     return data;
 }
