@@ -1,0 +1,38 @@
+[
+    {
+        "name": "auto-wheat",
+        "title": "Auto Wheat",
+        "levels": [
+            {
+                "cost": 10,
+                "description": "Will give you 1 wheat every 1 seconds",
+                "upgrade": 1,
+                "upgradeType": "click"
+            },
+            {
+                "cost": 20,
+                "description": "Will give you 2 wheat every 1 seconds",
+                "upgrade": 2,
+                "upgradeType": "click"
+            },
+            {
+                "cost": 30,
+                "description": "Will give you 3 wheat every 1 seconds",
+                "upgrade": 3,
+                "upgradeType": "click"
+            },
+            {
+                "cost": 40,
+                "description": "Will give you 4 wheat every 1 seconds",
+                "upgrade": 4,
+                "upgradeType": "click"
+            },
+            {
+                "cost": 50,
+                "description": "Will give you 5 wheat every 1 seconds",
+                "upgrade": 5,
+                "upgradeType": "click"
+            }
+        ]
+    }
+]

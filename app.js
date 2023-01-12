@@ -1,28 +1,29 @@
-// Wheat, flour, dough, bread
-var scores = [0, 0, 0, 0];
+// Wheat, flour, dough, bread, money
+var scores = [0, 0, 0, 0, 0];
 
 // Wheat: 0, Flour: 5 wheat, Dough: 10 flour, Bread: 10 dough
 var itemCosts = [0, 5, 10, 10];
+
+// Wheat: $0, Flour: $1, Dough: $5, Bread: $20
+var itemValues = [0, 1, 5, 20];
 var activatedItem = "wheat";
+var GAME_SAVE_KEY = "GAME_SAVE";
 
 // DOM Elements
-var itemButtons = [
-    document.getElementById("wheat-button"),
-    document.getElementById("flour-button"),
-    document.getElementById("dough-button"),
-    document.getElementById("bread-button"),
-];
+const itemButtons = document.getElementsByClassName("activated-item-button");
+const uiItemScores = document.getElementsByClassName("inv-item");
 
-var uiItemScores = [
-    document.getElementById("wheat-inv"),
-    document.getElementById("flour-inv"),
-    document.getElementById("dough-inv"),
-    document.getElementById("bread-inv"),
-];
-
+const imgList = document.querySelectorAll("img");
 var activatedItemImage = document.getElementById("activated-item");
-
-var GAME_SAVE_KEY = "GAME_SAVE";
+// Create our number formatter.
+// Sauce: https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
+const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    // These options are needed to round to whole numbers if that's what you want.
+    minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
 
 // ##############
 // ### EVENTS ###
@@ -45,26 +46,16 @@ function activatedItemClicked() {
         handleItemSwitch(getNameFromIndex(item - 1));
     }
 
+    // Add the corresponding amount of money necessary
+    // when the item is clicked.
+    scores[4] += itemValues[item];
+
     // Display that score on the UI
-    let i = 0;
-    uiItemScores.forEach((element) => {
-        element.textContent = scores[i];
-        i++;
-    });
-    console.log(scores);
+    updateUI();
 
-    // Each click we want to update the item buttons
-    // to show if the user can afford it.
-    let j = 0;
-    itemButtons.forEach((element) => {
-        element.disabled = !canAfford(j);
-        if (!canAfford(j)) element.classList.remove("item-button-selected");
-
-        j++;
-    });
-
-    // Testing local storage:
-    saveToLocalStorage();
+    // Save the game every time the user clicks so they
+    // don't lose progress if they close the page.
+    saveToLocalStorage(scores);
 }
 
 /**
@@ -77,6 +68,19 @@ function handleItemSwitch(changeTo) {
 
     // Change the source of the image to reflect the activated item.
     activatedItemImage.src = `assets/images/${changeTo}.jpg`;
+}
+
+window.onload = () => {
+    scores = getLocalStorageData();
+    updateUI();
+    console.log("Loaded scores:", getLocalStorageData());
+};
+
+for (let i = 0; i < imgList.length; i++) {
+    const element = imgList[i];
+    element.ondragstart = () => {
+        return false;
+    };
 }
 
 // ################
@@ -107,9 +111,10 @@ function switchUIActivatedItem(newActivatedItemIndex) {
     let i = 0;
 
     // Loop over our list of DOM elements
-    itemButtons.forEach((element) => {
+    for (let i = 0; i < itemButtons.length; i++) {
         // Remove all classes then add the correct ones to show if
         // the item is selected or not.
+        const element = itemButtons[i];
 
         if (i === newActivatedItemIndex) {
             element.classList.remove("item-button-deselected");
@@ -124,18 +129,28 @@ function switchUIActivatedItem(newActivatedItemIndex) {
                 element.classList.add("item-button-deselected");
             }
         }
-
-        i++;
-    });
+    }
 }
 
 /**
  * Save the game to the local storage in the browser.
  */
-function saveToLocalStorage() {
-    localStorage.setItem(GAME_SAVE_KEY, scores);
+function saveToLocalStorage(data) {
+    localStorage.setItem(GAME_SAVE_KEY, data);
+}
 
-    console.log(localStorage.getItem(GAME_SAVE_KEY));
+/**
+ * Load a save from the local storage in the browser.
+ */
+function getLocalStorageData() {
+    let rawData = localStorage.getItem(GAME_SAVE_KEY);
+    let data = [];
+
+    rawData.split(",").forEach((element) => {
+        data.push(parseInt(element));
+    });
+
+    return data;
 }
 
 /**
@@ -175,5 +190,36 @@ function getNameFromIndex(index) {
 
         default:
             return "none";
+    }
+}
+
+function resetScores() {
+    scores = [0, 0, 0, 0];
+}
+
+function setScore(index, score) {
+    scores[index] = parseInt(score);
+    updateUI();
+}
+
+/**
+ * Updates the UI of the app to reflect the value of
+ * the 'scores' list and also changes the item buttons
+ * accordingly to show the user what they can afford.
+ */
+function updateUI() {
+    for (let i = 0; i < uiItemScores.length; i++) {
+        const element = uiItemScores[i];
+        element.textContent = scores[i];
+    }
+    // Manually change the money to add the dollar sign.
+    uiItemScores.item(4).textContent = formatter.format(scores[4]);
+
+    // We want to update the item buttons
+    // to show if the user can afford it.
+    for (let i = 0; i < itemButtons.length; i++) {
+        const element = itemButtons[i];
+        element.disabled = !canAfford(i);
+        if (!canAfford(i)) element.classList.remove("item-button-selected");
     }
 }

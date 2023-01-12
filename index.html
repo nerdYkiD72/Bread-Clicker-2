@@ -19,12 +19,14 @@
             rel="stylesheet"
             href="styles.css"
         />
+        <link rel="icon" type="image/x-icon" href="favicon.jpg">
     </head>
     <body>
         <div class="has-text-centered">
             <div class="raised-box">
                 <h1 class="is-size-1">Bread Clicker</h1>
             </div>
+            
         </div>
 
         <!-- Inventory bar -->
@@ -35,29 +37,31 @@
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Wheat</div>
-                    <div id="wheat-inv">0</div>
+                    <div class="inv-bar-item inv-item" id="wheat-inv">0</div>
                 </div>
             </div>
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Flour</div>
-                    <div id="flour-inv">0</div>
+                    <div class="inv-bar-item inv-item" id="flour-inv">0</div>
                 </div>
             </div>
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Dough</div>
-                    <div id="dough-inv">0</div>
+                    <div class="inv-bar-item inv-item" id="dough-inv">0</div>
                 </div>
             </div>
 
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Bread</div>
-                    <div id="bread-inv">0</div>
+                    <div class="inv-bar-item inv-item" id="bread-inv">0</div>
                 </div>
             </div>
         </div>
+
+        <div class="raised-box inv-item" id="money">$1,000</div>
 
         <!-- Inventory Bar End -->
 
@@ -75,7 +79,7 @@
             <!-- wheat -->
             <div>
                 <button
-                    class="button item-button-selected"
+                    class="button item-button-selected activated-item-button"
                     id="wheat-button"
                     onclick="handleItemSwitch('wheat')"
                 >
@@ -87,7 +91,7 @@
             <div>
                 <button
                     disabled
-                    class="button item-button-deselected"
+                    class="button item-button-deselected activated-item-button"
                     id="flour-button"
                     onclick="handleItemSwitch('flour')"
                 >
@@ -99,7 +103,7 @@
             <div>
                 <button
                     disabled
-                    class="button item-button-deselected"
+                    class="button item-button-deselected activated-item-button"
                     id="dough-button"
                     onclick="handleItemSwitch('dough')"
                 >
@@ -111,7 +115,7 @@
             <div>
                 <button
                     disabled
-                    class="button item-button-deselected"
+                    class="button item-button-deselected activated-item-button"
                     id="bread-button"
                     onclick="handleItemSwitch('bread')"
                 >
@@ -119,16 +123,42 @@
                 </button>
             </div>
 
-            <div id="upgrade-container">
+            <div class="raised-box" id="upgrade-container">
                 <ul>
+                  <li>
                     <div class="upgrade-box">
-                        <h2>Auto Wheat</h2>
-                        <p>Will automatically buy 1 wheat every 2 seconds</p>
+                      <h2 class="upgrade-title" id="auto-wheat-title">Auto Wheat</h2>
+                      <p id="auto-wheat-description">Will automatically buy 1 wheat every 2 seconds</p>
+                      <button class="purchase-button">Purchase</button>
                     </div>
+                  </li>
+                  <li>
+                    <div class="upgrade-box">
+                      <h2 class="upgrade-title">Auto Wheat</h2>
+                      <p>Will automatically buy 1 wheat every 2 seconds</p>
+                      <button class="purchase-button">Purchase</button>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="upgrade-box">
+                      <h2 class="upgrade-title">Auto Wheat</h2>
+                      <p>Will automatically buy 1 wheat every 2 seconds</p>
+                      <button class="purchase-button">Purchase</button>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="upgrade-box">
+                      <h2 class="upgrade-title">Auto Wheat</h2>
+                      <p>Will automatically buy 1 wheat every 2 seconds</p>
+                      <button class="purchase-button">Purchase</button>
+                    </div>
+                  </li>
+                    
                 </ul>
             </div>
         </div>
         <!-- Main Grid End -->
     </body>
+    <script src="upgrades.js"></script>
     <script src="app.js"></script>
 </html>
