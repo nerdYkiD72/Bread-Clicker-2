@@ -122,6 +122,11 @@ body {
     overflow-y: auto;
 }
 
+.upgrade-cost {
+    display: inline-block;
+    margin-left: 10px;
+}
+
 #activated-item {
     height: 256px;
     width: 256px;

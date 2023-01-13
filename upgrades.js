@@ -1,7 +1,10 @@
 var robotClicksPerSecond = 0;
 var upgradesData;
+var userUpgradesData;
 
 var upgradeList = document.getElementById("upgrade-list");
+
+const SAVE_KEY = "saved-upgrades";
 
 loadUpgradeData();
 
@@ -19,11 +22,30 @@ async function loadUpgradeData() {
             upgradesData = json;
         });
 
+    // As well as the data defining upgrades, we need to
+    // load save data showing what upgrades the user has and
+    // what level they are.
+    let savedData = localStorage.getItem(SAVE_KEY);
+
+    if (savedData) {
+        userUpgradesData = JSON.parse(savedData);
+    } else {
+        // No saved data in local storage so we will initialize empty data.
+        userUpgradesData = {};
+        upgradesData.forEach((element) => {
+            userUpgradesData[element.name] = -1;
+        });
+    }
+
     // Now we can continue on working with the upgrade data.
     console.log(upgradesData);
+    console.log(userUpgradesData);
 
-    console.log("Updating the UI from upgrades.json");
     loadContentToPage("auto-wheat");
+}
+
+function saveUserUpgradeData() {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(userUpgradesData));
 }
 
 /**
@@ -37,7 +59,7 @@ function loadContentToPage(location) {
     if (location === "all") {
         // Loop over the whole document to add data.
     } else {
-        // Use the name given to find the upgrade item we want t pull data from.
+        // Use the name given to find the upgrade item we want to pull data from.
         upgradesData.forEach((element) => {
             // Loop over the elements in our upgrades
             // file and select the one with the matching name.
@@ -46,6 +68,23 @@ function loadContentToPage(location) {
                 console.log(`${location}-description`);
 
                 appendUpgradeComponent(element);
+
+                // Update the cost
+                document.getElementById(`${location}-cost`).innerHTML = `$${
+                    element.levels[userUpgradesData[element.name]].cost
+                }`;
+
+                // Update the description:
+                document.getElementById(
+                    `${location}-description`
+                ).innerHTML = `${
+                    element.levels[userUpgradesData[element.name]].description
+                }`;
+
+                // Update the title with format: "[UpgradeName] ([Level])"
+                document.getElementById(`${location}-title`).innerHTML = `${
+                    element.title
+                } (${userUpgradesData[element.name]})`;
             }
         });
     }
@@ -73,8 +112,17 @@ function appendUpgradeComponent(componentContent) {
     // Create the description element and add the id necessary to fill in data later.
     let ugDescription = document.createElement("p");
     ugDescription.innerHTML =
-        " Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit hic illo a explicabo, rem cumque eum accusamus labore. Eveniet ipsam consequatur corporis quaerat quam enim possimus quod modi incidunt.";
-    ugTitle.setAttribute("id", `${name}-description`);
+        " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+    ugDescription.setAttribute("id", `${name}-description`);
+
+    let ugButton = document.createElement("button");
+    ugButton.classList.add("purchase-button");
+    ugButton.innerHTML = "Purchase";
+
+    let ugCost = document.createElement("p");
+    ugCost.classList.add("upgrade-cost");
+    ugCost.innerHTML = "$100";
+    ugCost.setAttribute("id", `${name}-cost`);
 
     /**  Will make something like this:
      * <li class="upgrade-box">
@@ -85,11 +133,14 @@ function appendUpgradeComponent(componentContent) {
             Will automatically buy 1 wheat every 2 seconds
         </p>
         <button class="purchase-button">Purchase</button>
+        <p class="upgrade-cost" id="auto-wheat-cost">$100</p>
     </li>
     */
     ugBox.appendChild(ugTitle);
     ugBox.appendChild(ugDescription);
+    ugBox.appendChild(ugButton);
+    ugBox.appendChild(ugCost);
     upgradeList.appendChild(ugBox);
 
-    console.log("Done");
+    console.log(`Appended element: ${name}`);
 }
