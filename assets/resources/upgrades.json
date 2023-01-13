@@ -85,7 +85,7 @@
     },
     {
         "name": "auto-dough",
-        "title": "Auto Dough",
+        "title": "Audough",
         "levels": [
             {
                 "cost": 20,
@@ -111,6 +111,39 @@
                 "upgradeInfo": {
                     "type": "click_dough",
                     "amount": 1,
+                    "interval": 0.5
+                } 
+            }
+        ]
+    },
+    {
+        "name": "auto-bread",
+        "title": "Auto Bread",
+        "levels": [
+            {
+                "cost": 50,
+                "description": "When available, will purchase 1 dough every 2 seconds.",
+                "upgradeInfo": {
+                    "type": "click_bread",
+                    "amount": 1,
+                    "interval": 2
+                } 
+            },
+            {
+                "cost": 100,
+                "description": "When available, will purchase 1 dough every 1 seconds.",
+                "upgradeInfo": {
+                    "type": "click_bread",
+                    "amount": 1,
+                    "interval": 1
+                } 
+            },
+            {
+                "cost": 150,
+                "description": "When available, will purchase 1 dough every 0.5 seconds.",
+                "upgradeInfo": {
+                    "type": "click_bread",
+                    "amount": 2,
                     "interval": 0.5
                 } 
             }

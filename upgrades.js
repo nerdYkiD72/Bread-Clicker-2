@@ -20,15 +20,29 @@ function applyUpgrades() {
 
     upgradesData.forEach((ugType) => {
         // If there is an upgrade purchased.
+
+        // TODO: Upgrades aren't working
+
         if (geCurrentUpgradeLevel(ugType.name) > 0) {
-            let ugLevel = geCurrentUpgradeLevel(ugType.name);
-            console.log(`Upgrade available: ${ugType.levels[ugLevel].upgradeInfo.type}`);
+            let ugLevel = geCurrentUpgradeLevel(ugType.name) - 1;
+            console.log(
+                `Upgrade available: ${ugType.levels[ugLevel].upgradeInfo.type}`
+            );
             let ugInfoType = ugType.levels[ugLevel].upgradeInfo.type;
             ugInfoType = ugInfoType.split("_");
             if (ugInfoType[0] == "click") {
                 // If upgrade is type click:
                 // Add the required amount of items to the correct type of item
-                scores[getIndexFromName(ugInfoType[1])] += ugType.levels[ugLevel].upgradeInfo.amount;
+                if (canAfford(getIndexFromName(ugInfoType[1]))) {
+                    scores[getIndexFromName(ugInfoType[1])] +=
+                        ugType.levels[ugLevel].upgradeInfo.amount;
+
+                    if (getIndexFromName(ugInfoType[1]) > 0) {
+                        // Item has a cost so subtract from the lower one.
+                        scores[getIndexFromName(ugInfoType[1]) - 1] -=
+                            itemCosts[getIndexFromName(ugInfoType[1])];
+                    }
+                }
 
                 updateUI();
             }
@@ -47,11 +61,11 @@ function handleUpgradePurchase(upgradeType) {
     // Check if there is another upgrade to upgrade to.
     if (moreUpgradeLevels(upgradeType)) {
         // Check if user can afford the next upgrade.
-        if (money >= ug.levels[geCurrentUpgradeLevel(upgradeType) + 1].cost) {
+        if (money >= ug.levels[geCurrentUpgradeLevel(upgradeType)].cost) {
             console.log("Purchase OK");
 
             // Purchase the item.
-            scores[4] -= ug.levels[geCurrentUpgradeLevel(upgradeType) + 1].cost;
+            scores[4] -= ug.levels[geCurrentUpgradeLevel(upgradeType)].cost;
             // Declare the new purchased level.
             userUpgradesData[upgradeType] += 1;
 
@@ -88,6 +102,15 @@ function moreUpgradeLevels(ugType) {
     return false;
 }
 
+function resetUserUpgradeData() {
+    userUpgradesData = {};
+    upgradesData.forEach((element) => {
+        userUpgradesData[element.name] = 0;
+    });
+    saveUserUpgradeData();
+    return "UserUpgrade data reset and saved.";
+}
+
 // #####################
 // ## LOADING CONTENT ##
 // #####################
@@ -114,10 +137,7 @@ async function loadUpgradeData() {
         userUpgradesData = JSON.parse(savedData);
     } else {
         // No saved data in local storage so we will initialize empty data.
-        userUpgradesData = {};
-        upgradesData.forEach((element) => {
-            userUpgradesData[element.name] = 0;
-        });
+        resetUserUpgradeData();
     }
 
     console.log("Loaded upgrades.json:", upgradesData);
@@ -162,13 +182,19 @@ function loadContentToPage(location) {
         // Use the name given to find the upgrade item we want to pull data from.
         upgradesData.forEach((upgradeType) => {
             // Check if we are at the correct location and that the location exists in the DOM.
-            if (upgradeType.name === location && document.getElementById(upgradeType.name) != null) {
+            if (
+                upgradeType.name === location &&
+                document.getElementById(upgradeType.name) != null
+            ) {
                 found = true;
                 contentLoader(upgradeType);
             }
         });
     }
-    if (!found) console.warn(`Could not fine the upgrade of type: "${location}" while trying to load content.`);
+    if (!found)
+        console.warn(
+            `Could not fine the upgrade of type: "${location}" while trying to load content.`
+        );
 }
 
 /**
@@ -187,13 +213,19 @@ function contentLoader(upgradeType) {
     }
 
     // Update the cost
-    document.getElementById(`${location}-cost`).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
+    document.getElementById(
+        `${location}-cost`
+    ).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
 
     // Update the description:
-    document.getElementById(`${location}-description`).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
+    document.getElementById(
+        `${location}-description`
+    ).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
 
     // Update the title with format: "[UpgradeName] ([Level])"
-    document.getElementById(`${location}-title`).innerHTML = `${upgradeType.title} (${upgradeLevel + 1})`;
+    document.getElementById(`${location}-title`).innerHTML = `${
+        upgradeType.title
+    } (${upgradeLevel + 1})`;
 }
 
 /**
@@ -217,7 +249,8 @@ function appendUpgradeComponent(componentContent) {
 
     // Create the description element and add the id necessary to fill in data later.
     let ugDescription = document.createElement("p");
-    ugDescription.innerHTML = " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+    ugDescription.innerHTML =
+        " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     ugDescription.setAttribute("id", `${name}-description`);
 
     let ugButton = document.createElement("button");
