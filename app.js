@@ -204,6 +204,7 @@ function resetScores() {
 function setScore(index, score) {
     scores[index] = parseInt(score);
     updateUI();
+    saveToLocalStorage(scores);
 }
 
 /**

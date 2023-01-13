@@ -1,6 +1,7 @@
 var robotClicksPerSecond = 0;
 var upgradesData;
 var userUpgradesData;
+var ugChangeIndex = 0;
 
 var upgradeList = document.getElementById("upgrade-list");
 
@@ -8,9 +9,88 @@ const SAVE_KEY = "saved-upgrades";
 
 loadUpgradeData();
 
-// setInterval(() => {
-//     console.log("High");
-// }, 1000);
+// #######################
+// ## HANDLING UPGRADES ##
+// #######################
+
+setInterval(() => applyUpgrades(), 1000);
+
+function applyUpgrades() {
+    // console.log("HIIIII", ugChangeIndex);
+
+    upgradesData.forEach((ugType) => {
+        // If there is an upgrade purchased.
+        if (geCurrentUpgradeLevel(ugType.name) > 0) {
+            let ugLevel = geCurrentUpgradeLevel(ugType.name);
+            console.log(`Upgrade available: ${ugType.levels[ugLevel].upgradeInfo.type}`);
+            let ugInfoType = ugType.levels[ugLevel].upgradeInfo.type;
+            ugInfoType = ugInfoType.split("_");
+            if (ugInfoType[0] == "click") {
+                // If upgrade is type click:
+                // Add the required amount of items to the correct type of item
+                scores[getIndexFromName(ugInfoType[1])] += ugType.levels[ugLevel].upgradeInfo.amount;
+
+                updateUI();
+            }
+        }
+    });
+
+    ugChangeIndex++;
+}
+
+function handleUpgradePurchase(upgradeType) {
+    let money = scores[4];
+    console.log(getUpgradeObject(upgradeType));
+    let ug = getUpgradeObject(upgradeType);
+    // console.log(geCurrentUpgradeLevel(upgradeType));
+
+    // Check if there is another upgrade to upgrade to.
+    if (moreUpgradeLevels(upgradeType)) {
+        // Check if user can afford the next upgrade.
+        if (money >= ug.levels[geCurrentUpgradeLevel(upgradeType) + 1].cost) {
+            console.log("Purchase OK");
+
+            // Purchase the item.
+            scores[4] -= ug.levels[geCurrentUpgradeLevel(upgradeType) + 1].cost;
+            // Declare the new purchased level.
+            userUpgradesData[upgradeType] += 1;
+
+            // Save the data.
+            saveUserUpgradeData();
+            saveToLocalStorage(scores);
+
+            // Update UI
+            loadContentToPage(upgradeType);
+            updateUI();
+        } else {
+            console.log("Not enough funds.");
+        }
+    } else {
+        console.log("You have reached this items max upgrade level.");
+    }
+
+    saveUserUpgradeData();
+}
+
+function getUpgradeObject(upgradeType) {
+    for (let i = 0; i < upgradesData.length; i++) {
+        const upgrade = upgradesData[i];
+
+        if (upgrade.name == upgradeType) {
+            return upgrade;
+        }
+    }
+}
+
+function moreUpgradeLevels(ugType) {
+    let ug = getUpgradeObject(ugType);
+    if (ug.levels[geCurrentUpgradeLevel(ugType) + 1] != null) return true;
+    return false;
+}
+
+// #####################
+// ## LOADING CONTENT ##
+// #####################
 
 /**
  * Loads data we need of what upgrades exist and the users progress.
@@ -36,7 +116,7 @@ async function loadUpgradeData() {
         // No saved data in local storage so we will initialize empty data.
         userUpgradesData = {};
         upgradesData.forEach((element) => {
-            userUpgradesData[element.name] = -1;
+            userUpgradesData[element.name] = 0;
         });
     }
 
@@ -103,7 +183,7 @@ function contentLoader(upgradeType) {
     // of the first level or index 0.
     let upgradeLevel = 0;
     if (userUpgradesData[upgradeType.name] > -1) {
-        upgradeLevel = userUpgradesData[upgradeType.name];
+        upgradeLevel = geCurrentUpgradeLevel(upgradeType.name);
     }
 
     // Update the cost
@@ -143,6 +223,7 @@ function appendUpgradeComponent(componentContent) {
     let ugButton = document.createElement("button");
     ugButton.classList.add("purchase-button");
     ugButton.innerHTML = "Purchase";
+    ugButton.setAttribute("onclick", `handleUpgradePurchase('${name}')`);
 
     let ugCost = document.createElement("p");
     ugCost.classList.add("upgrade-cost");
@@ -168,6 +249,10 @@ function appendUpgradeComponent(componentContent) {
     upgradeList.appendChild(ugBox);
 
     console.log(`Appended element: "${name}"`);
+}
+
+function geCurrentUpgradeLevel(upgradeType) {
+    return userUpgradesData[upgradeType];
 }
 
 function saveUserUpgradeData() {

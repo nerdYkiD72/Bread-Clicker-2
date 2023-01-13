@@ -2,28 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta
-            http-equiv="X-UA-Compatible"
-            content="IE=edge"
-        />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-        />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Final Project Name Here</title>
-        <link
-            rel="stylesheet"
-            href="bulma.min.css"
-        />
-        <link
-            rel="stylesheet"
-            href="styles.css"
-        />
-        <link
-            rel="icon"
-            type="image/x-icon"
-            href="favicon.jpg"
-        />
+        <link rel="stylesheet" href="bulma.min.css" />
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="icon" type="image/x-icon" href="favicon.jpg" />
     </head>
     <body>
         <div class="has-text-centered">
@@ -33,129 +17,72 @@
         </div>
 
         <!-- Inventory bar -->
-        <div
-            class="columns is-centered"
-            id="inventory-bar"
-        >
+        <div class="columns is-centered" id="inventory-bar">
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Wheat</div>
-                    <div
-                        class="inv-bar-item inv-item"
-                        id="wheat-inv"
-                    >
-                        0
-                    </div>
+                    <div class="inv-bar-item inv-item" id="wheat-inv">0</div>
                 </div>
             </div>
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Flour</div>
-                    <div
-                        class="inv-bar-item inv-item"
-                        id="flour-inv"
-                    >
-                        0
-                    </div>
+                    <div class="inv-bar-item inv-item" id="flour-inv">0</div>
                 </div>
             </div>
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Dough</div>
-                    <div
-                        class="inv-bar-item inv-item"
-                        id="dough-inv"
-                    >
-                        0
-                    </div>
+                    <div class="inv-bar-item inv-item" id="dough-inv">0</div>
                 </div>
             </div>
 
             <div class="column has-text-centered">
                 <div class="raised-box">
                     <div>Bread</div>
-                    <div
-                        class="inv-bar-item inv-item"
-                        id="bread-inv"
-                    >
-                        0
-                    </div>
+                    <div class="inv-bar-item inv-item" id="bread-inv">0</div>
                 </div>
             </div>
         </div>
 
-        <div
-            class="raised-box inv-item"
-            id="money"
-        >
-            $1,000
-        </div>
+        <div class="raised-box inv-item" id="money">$1,000</div>
 
         <!-- Inventory Bar End -->
 
         <!-- Main Grid -->
         <div class="grid-container">
             <div id="activated-item-container">
-                <img
-                    id="activated-item"
-                    src="assets/images/wheat.jpg"
-                    alt=""
-                    onclick="activatedItemClicked()"
-                />
+                <img id="activated-item" src="assets/images/wheat.jpg" alt="" onclick="activatedItemClicked()" />
             </div>
 
             <!-- wheat -->
             <div>
-                <button
-                    class="button item-button-selected activated-item-button"
-                    id="wheat-button"
-                    onclick="handleItemSwitch('wheat')"
-                >
-                    Wheat
-                </button>
+                <button class="button item-button-selected activated-item-button" id="wheat-button" onclick="handleItemSwitch('wheat')">Wheat</button>
             </div>
 
             <!-- flour -->
             <div>
-                <button
-                    disabled
-                    class="button item-button-deselected activated-item-button"
-                    id="flour-button"
-                    onclick="handleItemSwitch('flour')"
-                >
+                <button disabled class="button item-button-deselected activated-item-button" id="flour-button" onclick="handleItemSwitch('flour')">
                     Flour
                 </button>
             </div>
 
             <!-- Dough -->
             <div>
-                <button
-                    disabled
-                    class="button item-button-deselected activated-item-button"
-                    id="dough-button"
-                    onclick="handleItemSwitch('dough')"
-                >
+                <button disabled class="button item-button-deselected activated-item-button" id="dough-button" onclick="handleItemSwitch('dough')">
                     Dough
                 </button>
             </div>
 
             <!-- Bread -->
             <div>
-                <button
-                    disabled
-                    class="button item-button-deselected activated-item-button"
-                    id="bread-button"
-                    onclick="handleItemSwitch('bread')"
-                >
+                <button disabled class="button item-button-deselected activated-item-button" id="bread-button" onclick="handleItemSwitch('bread')">
                     Bread
                 </button>
             </div>
 
             <!-- Upgrade -->
-            <div
-                class="raised-box"
-                id="upgrade-container"
-            >
+            <div class="raised-box" id="upgrade-container">
                 <ul id="upgrade-list">
                     <!-- <li class="upgrade-box">
                         <h2
@@ -202,6 +129,6 @@
         </div>
         <!-- Main Grid End -->
     </body>
-    <script src="upgrades.js"></script>
     <script src="app.js"></script>
+    <script src="upgrades.js"></script>
 </html>
