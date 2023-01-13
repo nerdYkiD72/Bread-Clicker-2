@@ -12,8 +12,11 @@ loadUpgradeData();
 //     console.log("High");
 // }, 1000);
 
+/**
+ * Loads data we need of what upgrades exist and the users progress.
+ */
 async function loadUpgradeData() {
-    // Wait for the fetch method to get the upgrades file.
+    // Wait for the fetch method to get the upgrades.json file.
     await fetch("assets/resources/upgrades.json")
         .then(function (u) {
             return u.json();
@@ -37,15 +40,24 @@ async function loadUpgradeData() {
         });
     }
 
-    // Now we can continue on working with the upgrade data.
-    console.log(upgradesData);
-    console.log(userUpgradesData);
+    console.log("Loaded upgrades.json:", upgradesData);
+    console.log("Loaded stored upgrade data:", userUpgradesData);
 
-    loadContentToPage("auto-wheat");
+    // Now we can continue loading UI.
+    handleLoad();
 }
 
-function saveUserUpgradeData() {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(userUpgradesData));
+/**
+ * Called after we have loaded all upgrade data.
+ */
+function handleLoad() {
+    // Display a box for every upgrade we have.
+    for (let i = 0; i < upgradesData.length; i++) {
+        appendUpgradeComponent(upgradesData[i]);
+    }
+
+    // Fill those boxes with the necessary content.
+    loadContentToPage("all");
 }
 
 /**
@@ -54,40 +66,54 @@ function saveUserUpgradeData() {
  * Either enter the name of an upgrade or simply "all" to refresh every upgrade.
  */
 function loadContentToPage(location) {
-    console.log(`Updating the content of ${location}`);
+    console.log(`Updating the upgrade content of: "${location}"`);
+    let found = false;
 
     if (location === "all") {
         // Loop over the whole document to add data.
+        upgradesData.forEach((upgradeType) => {
+            // Check if the element is there to update in the DOM.
+            if (document.getElementById(upgradeType.name) != null) {
+                found = true;
+                contentLoader(upgradeType);
+            }
+        });
     } else {
         // Use the name given to find the upgrade item we want to pull data from.
-        upgradesData.forEach((element) => {
-            // Loop over the elements in our upgrades
-            // file and select the one with the matching name.
-            let upgradeLevel = 0;
-            if (element.name === location) {
-                console.log(`${location}-description`);
-
-                appendUpgradeComponent(element);
-
-                // Update the cost
-                document.getElementById(`${location}-cost`).innerHTML = `$${
-                    element.levels[userUpgradesData[element.name]].cost
-                }`;
-
-                // Update the description:
-                document.getElementById(
-                    `${location}-description`
-                ).innerHTML = `${
-                    element.levels[userUpgradesData[element.name]].description
-                }`;
-
-                // Update the title with format: "[UpgradeName] ([Level])"
-                document.getElementById(`${location}-title`).innerHTML = `${
-                    element.title
-                } (${userUpgradesData[element.name]})`;
+        upgradesData.forEach((upgradeType) => {
+            // Check if we are at the correct location and that the location exists in the DOM.
+            if (upgradeType.name === location && document.getElementById(upgradeType.name) != null) {
+                found = true;
+                contentLoader(upgradeType);
             }
         });
     }
+    if (!found) console.warn(`Could not fine the upgrade of type: "${location}" while trying to load content.`);
+}
+
+/**
+ * Part of loadContentToPage() that interacts with the DOM.
+ * @param {object} upgradeType The object from upgrades.json to load content from.
+ */
+function contentLoader(upgradeType) {
+    let location = upgradeType.name;
+    // If the stored level of the upgrade is not -1
+    // then we know the level data is valid and we will
+    // use that, otherwise we want to show the information
+    // of the first level or index 0.
+    let upgradeLevel = 0;
+    if (userUpgradesData[upgradeType.name] > -1) {
+        upgradeLevel = userUpgradesData[upgradeType.name];
+    }
+
+    // Update the cost
+    document.getElementById(`${location}-cost`).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
+
+    // Update the description:
+    document.getElementById(`${location}-description`).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
+
+    // Update the title with format: "[UpgradeName] ([Level])"
+    document.getElementById(`${location}-title`).innerHTML = `${upgradeType.title} (${upgradeLevel + 1})`;
 }
 
 /**
@@ -95,13 +121,13 @@ function loadContentToPage(location) {
  * @param {object} componentContent The object defining the upgrade component.
  */
 function appendUpgradeComponent(componentContent) {
-    console.log("Component Content:", componentContent);
     // The name that we will use in the id of the generated items.
     let name = componentContent.name;
 
     // Create the li element to place all content in.
     let ugBox = document.createElement("li");
     ugBox.classList.add("upgrade-box");
+    ugBox.setAttribute("id", `${name}`);
 
     // Create the title element, style it, add the id necessary to fill in data later.
     let ugTitle = document.createElement("h2");
@@ -111,8 +137,7 @@ function appendUpgradeComponent(componentContent) {
 
     // Create the description element and add the id necessary to fill in data later.
     let ugDescription = document.createElement("p");
-    ugDescription.innerHTML =
-        " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+    ugDescription.innerHTML = " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     ugDescription.setAttribute("id", `${name}-description`);
 
     let ugButton = document.createElement("button");
@@ -142,5 +167,9 @@ function appendUpgradeComponent(componentContent) {
     ugBox.appendChild(ugCost);
     upgradeList.appendChild(ugBox);
 
-    console.log(`Appended element: ${name}`);
+    console.log(`Appended element: "${name}"`);
+}
+
+function saveUserUpgradeData() {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(userUpgradesData));
 }
