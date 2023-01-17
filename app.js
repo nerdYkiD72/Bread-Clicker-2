@@ -36,26 +36,13 @@ function activatedItemClicked() {
     // available to make the current item.
 
     if (canAfford(item)) {
-        scores[item - 1] -= itemCosts[item]; // Subtract the cost.
-
-        scores[item] += 1; // Add to the item just bought.
+        purchaseItem(item);
     } else {
         // If a user had an item activated but can now no longer
         // afford it select the previous item.
         console.log(`Switching to ${getNameFromIndex(item)}`);
         handleItemSwitch(getNameFromIndex(item - 1));
     }
-
-    // Add the corresponding amount of money necessary
-    // when the item is clicked.
-    scores[4] += itemValues[item];
-
-    // Display that score on the UI
-    updateUI();
-
-    // Save the game every time the user clicks so they
-    // don't lose progress if they close the page.
-    saveToLocalStorage(scores);
 }
 
 /**
@@ -135,8 +122,8 @@ function switchUIActivatedItem(newActivatedItemIndex) {
 /**
  * Save the game to the local storage in the browser.
  */
-function saveToLocalStorage(data) {
-    localStorage.setItem(GAME_SAVE_KEY, data);
+function saveToLocalStorage() {
+    localStorage.setItem(GAME_SAVE_KEY, scores);
 }
 
 /**
@@ -204,7 +191,7 @@ function resetScores() {
 function setScore(index, score) {
     scores[index] = parseInt(score);
     updateUI();
-    saveToLocalStorage(scores);
+    saveToLocalStorage();
 }
 
 /**
@@ -227,4 +214,22 @@ function updateUI() {
         element.disabled = !canAfford(i);
         if (!canAfford(i)) element.classList.remove("item-button-selected");
     }
+}
+
+function purchaseItem(requestedItem) {
+    if (typeof requestedItem === "string") {
+        requestedItem = getIndexFromName(requestedItem);
+    }
+
+    if (canAfford(requestedItem)) {
+        scores[requestedItem - 1] -= itemCosts[requestedItem]; // Subtract the cost.
+        scores[requestedItem] += 1; // Add to the item just bought.
+
+        // Add the corresponding amount of money necessary
+        // when the item is clicked.
+        scores[4] += itemValues[requestedItem];
+    }
+
+    updateUI();
+    saveToLocalStorage();
 }
