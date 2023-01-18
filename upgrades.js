@@ -62,8 +62,7 @@ function testCPS() {
 setInterval(() => applyUpgrades(), 1000);
 
 function applyUpgrades() {
-    // console.log("HIIIII", ugChangeIndex);
-
+    console.log(userUpgradesData);
     upgradesData.forEach((ugType) => {
         // If there is an upgrade purchased.
 
@@ -80,11 +79,13 @@ function applyUpgrades() {
                 // If upgrade is type click:
                 // Add the required amount of items to the correct type of item
                 if (canAfford(getIndexFromName(ugInfoType[1]))) {
-                    scores[getIndexFromName(ugInfoType[1])] += ugType.levels[ugLevel].upgradeInfo.amount;
+                    scores[getIndexFromName(ugInfoType[1])] +=
+                        ugType.levels[ugLevel].upgradeInfo.amount;
 
                     if (getIndexFromName(ugInfoType[1]) > 0) {
                         // Item has a cost so subtract from the lower one.
-                        scores[getIndexFromName(ugInfoType[1]) - 1] -= itemCosts[getIndexFromName(ugInfoType[1])];
+                        scores[getIndexFromName(ugInfoType[1]) - 1] -=
+                            itemCosts[getIndexFromName(ugInfoType[1])];
                     }
                 }
 
@@ -142,7 +143,7 @@ function getUpgradeObject(upgradeType) {
 
 function moreUpgradeLevels(ugType) {
     let ug = getUpgradeObject(ugType);
-    if (ug.levels[geCurrentUpgradeLevel(ugType) + 1] != null) return true;
+    if (ug.levels[geCurrentUpgradeLevel(d) + 1] != null) return true;
     return false;
 }
 
@@ -226,13 +227,19 @@ function loadContentToPage(location) {
         // Use the name given to find the upgrade item we want to pull data from.
         upgradesData.forEach((upgradeType) => {
             // Check if we are at the correct location and that the location exists in the DOM.
-            if (upgradeType.name === location && document.getElementById(upgradeType.name) != null) {
+            if (
+                upgradeType.name === location &&
+                document.getElementById(upgradeType.name) != null
+            ) {
                 found = true;
                 contentLoader(upgradeType);
             }
         });
     }
-    if (!found) console.warn(`Could not fine the upgrade of type: "${location}" while trying to load content.`);
+    if (!found)
+        console.warn(
+            `Could not fine the upgrade of type: "${location}" while trying to load content.`
+        );
 }
 
 /**
@@ -251,13 +258,19 @@ function contentLoader(upgradeType) {
     }
 
     // Update the cost
-    document.getElementById(`${location}-cost`).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
+    document.getElementById(
+        `${location}-cost`
+    ).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
 
     // Update the description:
-    document.getElementById(`${location}-description`).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
+    document.getElementById(
+        `${location}-description`
+    ).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
 
     // Update the title with format: "[UpgradeName] ([Level])"
-    document.getElementById(`${location}-title`).innerHTML = `${upgradeType.title} (${upgradeLevel + 1})`;
+    document.getElementById(`${location}-title`).innerHTML = `${
+        upgradeType.title
+    } (${upgradeLevel + 1})`;
 }
 
 /**
@@ -281,7 +294,8 @@ function appendUpgradeComponent(componentContent) {
 
     // Create the description element and add the id necessary to fill in data later.
     let ugDescription = document.createElement("p");
-    ugDescription.innerHTML = " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+    ugDescription.innerHTML =
+        " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     ugDescription.setAttribute("id", `${name}-description`);
 
     let ugButton = document.createElement("button");
