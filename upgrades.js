@@ -62,7 +62,6 @@ function testCPS() {
 setInterval(() => applyUpgrades(), 1000);
 
 function applyUpgrades() {
-    console.log(userUpgradesData);
     upgradesData.forEach((ugType) => {
         // If there is an upgrade purchased.
 
@@ -143,7 +142,7 @@ function getUpgradeObject(upgradeType) {
 
 function moreUpgradeLevels(ugType) {
     let ug = getUpgradeObject(ugType);
-    if (ug.levels[geCurrentUpgradeLevel(d) + 1] != null) return true;
+    if (ug.levels[geCurrentUpgradeLevel(ugType) + 1] != null) return true;
     return false;
 }
 
@@ -252,10 +251,17 @@ function contentLoader(upgradeType) {
     // then we know the level data is valid and we will
     // use that, otherwise we want to show the information
     // of the first level or index 0.
+
     let upgradeLevel = 0;
     if (userUpgradesData[upgradeType.name] > -1) {
         upgradeLevel = geCurrentUpgradeLevel(upgradeType.name);
     }
+    console.log("Get current Level", upgradeType.levels.length);
+    if (geCurrentUpgradeLevel(upgradeType.name) == upgradeType.levels.length) {
+        upgradeLevel = upgradeType.levels.length - 1;
+    }
+
+    console.log("Upgrade level", upgradeLevel);
 
     // Update the cost
     document.getElementById(
