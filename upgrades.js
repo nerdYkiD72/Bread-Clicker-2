@@ -1,3 +1,35 @@
+
+Skip to content
+Pull requests
+Issues
+Codespaces
+Marketplace
+Explore
+@nerdYkiD72
+nerdYkiD72 /
+Bread-Clicker-2
+Public
+
+Cannot fork because you own this repository and are not a member of any organizations.
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+Bread-Clicker-2/upgrades.js /
+@nerdYkiD72
+nerdYkiD72 Upgrades might be fixed lol
+Latest commit 3193f84 Jan 17, 2023
+History
+1 contributor
+338 lines (283 sloc) 10.5 KB
 var robotClicksPerSecond = 0;
 var upgradesData;
 var userUpgradesData;
@@ -78,13 +110,11 @@ function applyUpgrades() {
                 // If upgrade is type click:
                 // Add the required amount of items to the correct type of item
                 if (canAfford(getIndexFromName(ugInfoType[1]))) {
-                    scores[getIndexFromName(ugInfoType[1])] +=
-                        ugType.levels[ugLevel].upgradeInfo.amount;
+                    scores[getIndexFromName(ugInfoType[1])] += ugType.levels[ugLevel].upgradeInfo.amount;
 
                     if (getIndexFromName(ugInfoType[1]) > 0) {
                         // Item has a cost so subtract from the lower one.
-                        scores[getIndexFromName(ugInfoType[1]) - 1] -=
-                            itemCosts[getIndexFromName(ugInfoType[1])];
+                        scores[getIndexFromName(ugInfoType[1]) - 1] -= itemCosts[getIndexFromName(ugInfoType[1])];
                     }
                 }
 
@@ -142,7 +172,16 @@ function getUpgradeObject(upgradeType) {
 
 function moreUpgradeLevels(ugType) {
     let ug = getUpgradeObject(ugType);
-    if (ug.levels[geCurrentUpgradeLevel(ugType) + 1] != null) return true;
+    console.log(ug.levels.length - geCurrentUpgradeLevel(ugType));
+    if (ug.levels[geCurrentUpgradeLevel(ugType) + 1] != null) {
+        return true;
+    } else if (ug.levels.length - geCurrentUpgradeLevel(ugType) == 1) {
+        return true;
+    }
+    // } else {
+    //     if ()
+    // }
+
     return false;
 }
 
@@ -226,19 +265,13 @@ function loadContentToPage(location) {
         // Use the name given to find the upgrade item we want to pull data from.
         upgradesData.forEach((upgradeType) => {
             // Check if we are at the correct location and that the location exists in the DOM.
-            if (
-                upgradeType.name === location &&
-                document.getElementById(upgradeType.name) != null
-            ) {
+            if (upgradeType.name === location && document.getElementById(upgradeType.name) != null) {
                 found = true;
                 contentLoader(upgradeType);
             }
         });
     }
-    if (!found)
-        console.warn(
-            `Could not fine the upgrade of type: "${location}" while trying to load content.`
-        );
+    if (!found) console.warn(`Could not fine the upgrade of type: "${location}" while trying to load content.`);
 }
 
 /**
@@ -264,19 +297,13 @@ function contentLoader(upgradeType) {
     console.log("Upgrade level", upgradeLevel);
 
     // Update the cost
-    document.getElementById(
-        `${location}-cost`
-    ).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
+    document.getElementById(`${location}-cost`).innerHTML = `$${upgradeType.levels[upgradeLevel].cost}`;
 
     // Update the description:
-    document.getElementById(
-        `${location}-description`
-    ).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
+    document.getElementById(`${location}-description`).innerHTML = `${upgradeType.levels[upgradeLevel].description}`;
 
     // Update the title with format: "[UpgradeName] ([Level])"
-    document.getElementById(`${location}-title`).innerHTML = `${
-        upgradeType.title
-    } (${upgradeLevel + 1})`;
+    document.getElementById(`${location}-title`).innerHTML = `${upgradeType.title} (${upgradeLevel + 1})`;
 }
 
 /**
@@ -300,8 +327,7 @@ function appendUpgradeComponent(componentContent) {
 
     // Create the description element and add the id necessary to fill in data later.
     let ugDescription = document.createElement("p");
-    ugDescription.innerHTML =
-        " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
+    ugDescription.innerHTML = " Lorem ipsum dolor sit amet consectetur adipisicing elit.";
     ugDescription.setAttribute("id", `${name}-description`);
 
     let ugButton = document.createElement("button");
@@ -342,3 +368,20 @@ function geCurrentUpgradeLevel(upgradeType) {
 function saveUserUpgradeData() {
     localStorage.setItem(SAVE_KEY, JSON.stringify(userUpgradesData));
 }
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
+Bread-Clicker-2/upgrades.js at 3193f8412d6d26aadb80ee09d71a4f167cc38de9 · nerdYkiD72/Bread-Clicker-2
